@@ -8,12 +8,13 @@ namespace Bridal_salon.Controllers
     [ApiController]
     public class dressmakerController : ControllerBase
     {
-        private DressmakerServers dressmakerServers = new DressmakerServers();
+        private static DressmakerService dressmakerServers = new DressmakerService();
+        public static Checks<string> checks { get; set; }
         // GET: api/<dressmakerController>
         [HttpGet]
-        public List<dressmaker> Get()
+        public ActionResult Get()
         {
-            return dressmakerServers.GetDressmakers();
+            return Ok(dressmakerServers.GetDressmakers());
         }
         // GET api/<dressmakerController>/5
         //[HttpGet("{id}")]
@@ -21,28 +22,52 @@ namespace Bridal_salon.Controllers
         //{
         //    return "value";
         //}
-
+        [HttpGet("{id}")]
+        public ActionResult GetById(string id)
+        {
+            if(dressmakerServers.GetDressmakerById(id)==null)
+                return NotFound();
+            return Ok(true);
+        }
+        
         // POST api/<dressmakerController>
         [HttpPost]
-        public dressmaker Post([FromBody] dressmaker value)
+        public ActionResult Post([FromBody] dressmaker value)
         {
-            var item = dressmakerServers.PostDressmaker(value);
-            return item;
+            if (value == null || !checks.IsIsraeliIdNumber(value.Id) || !checks.IsValidEmail(value.Email))
+                return BadRequest();
+            dressmakerServers.PostDressmaker(value);
+            return Ok(true);
         }
 
         // PUT api/<dressmakerController>/5
         [HttpPut("{id}")]
-        public dressmaker Put(int id, [FromBody] dressmaker value)
+        public ActionResult Put(string id, [FromBody] dressmaker value)
         {
-            var item = dressmakerServers.PutDressmaker(id, value);
-            return item;
+            if (value == null || !checks.IsIsraeliIdNumber(value.Id) || !checks.IsValidEmail(value.Email))
+                return BadRequest();
+            if (!dressmakerServers.PutDressmaker(id, value))
+                return NotFound();
+            return Ok(true);
         }
 
         // DELETE api/<dressmakerController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(string id)
         {
-            dressmakerServers.DeleteDressmaker(id);
+            if(!dressmakerServers.DeleteDressmaker(id))
+                return NotFound();
+            return Ok(true);
+        }
+
+        public ActionResult MaxExperience()
+        {
+            return Ok(dressmakerServers.MaxExperience());
+        }
+
+        public ActionResult MinPrice()
+        {
+            return Ok(dressmakerServers.MinPrice());
         }
     }
 }

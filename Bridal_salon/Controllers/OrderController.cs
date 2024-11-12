@@ -3,81 +3,63 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bridal_salon.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
+        private static OrderService orderServers { get; set; }
         // GET: OrderController
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Get()
         {
-            return View();
+            return Ok(orderServers.GetOrders());
         }
-
-        // GET: OrderController/Details/5
-        public ActionResult Details(int id)
+        // GET api/<dressmakerController>/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
+        [HttpGet("{id}")]
+        public ActionResult GetByOrdNum(int OrdNum)
         {
-            return View();
+            if(orderServers.GetOrderByNum(OrdNum)==null)
+                return NotFound();
+            return Ok(true);
         }
-
-        // GET: OrderController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: OrderController/Create
+        // POST api/<OrderController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Post([FromBody] Order value)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            orderServers.PostOrder(value);
+            return Ok(true);
         }
 
-        // GET: OrderController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/<OrderController>/5
+        [HttpPut("{id}")]
+        public ActionResult Put(int OrdNum, [FromBody] Order value)
         {
-            return View();
+            if (!orderServers.PutOrder(OrdNum, value))
+                return NotFound();
+            return Ok(true);
         }
 
-        // POST: OrderController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/<OrderController>/5
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int OrdNum)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!orderServers.DeleteOrder(OrdNum))
+                return NotFound();
+            return Ok(true);
         }
 
-        // GET: OrderController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult GetByBride(string BrideId)
         {
-            return View();
+            return Ok(orderServers.GetByBride(BrideId));
         }
 
-        // POST: OrderController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DateRange(DateTime BeginDate, DateTime EndDate)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(orderServers.DateRange(BeginDate, EndDate));
         }
+
     }
 }

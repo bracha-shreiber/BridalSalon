@@ -3,81 +3,62 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bridal_salon.Controllers
 {
-    public class BrideController : Controller
+    public class BrideController : ControllerBase
     {
+        private static BrideService brideServers = new BrideService();
+
+        public static Checks<string> checks { get; set; }
         // GET: BrideController
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Get()
         {
-            return View();
+            return Ok(brideServers.GetBrides());
         }
-
-        // GET: BrideController/Details/5
-        public ActionResult Details(int id)
+        // GET api/<BrideController>/5
+        //[HttpGet("{id}")]
+        //public string Get(int id)
+        //{
+        //    return "value";
+        //}
+        [HttpGet("{id}")]
+        public ActionResult GetBrideById(string id)
         {
-            return View();
+            if(brideServers.GetBrideById(id) == null)
+                return NotFound();
+            return Ok(true);
         }
-
-        // GET: BrideController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: BrideController/Create
+        // POST api/<BrideController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Post([FromBody] Bride value)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (value == null || !checks.IsIsraeliIdNumber(value.Id) || !checks.IsValidEmail(value.Email))
+                return BadRequest();
+            brideServers.PostBride(value);
+            return Ok(true);
         }
 
-        // GET: BrideController/Edit/5
-        public ActionResult Edit(int id)
+        // PUT api/<BrideController>/5
+        [HttpPut("{id}")]
+        public ActionResult Put(string id, [FromBody] Bride value)
         {
-            return View();
+            if (value == null || !checks.IsIsraeliIdNumber(value.Id) || !checks.IsValidEmail(value.Email))
+                return BadRequest();
+            if (!brideServers.PutBride(id, value))
+                return NotFound();
+            return Ok(true);
         }
 
-        // POST: BrideController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // DELETE api/<dressmaBridekerController>/5
+        [HttpDelete("{id}")]
+        public ActionResult Delete(string id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!brideServers.DeleteBride(id))
+                return NotFound();
+            return Ok(true);
         }
-
-        // GET: BrideController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult GetByHeight(int BeginHeight, int LastHeight)
         {
-            return View();
-        }
-
-        // POST: BrideController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(brideServers.GetByHeight(BeginHeight, LastHeight));
         }
     }
 }
