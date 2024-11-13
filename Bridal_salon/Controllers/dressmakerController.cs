@@ -60,14 +60,14 @@ namespace Bridal_salon.Controllers
             return Ok(true);
         }
 
-        public ActionResult MaxExperience()
-        {
-            return Ok(dressmakerServers.MaxExperience());
-        }
+        //public ActionResult MaxExperience()
+        //{
+        //    return Ok(dressmakerServers.MaxExperience());
+        //}
 
-        public ActionResult MinPrice()
-        {
-            return Ok(dressmakerServers.MinPrice());
-        }
+        //public ActionResult MinPrice()
+        //{
+        //    return Ok(dressmakerServers.MinPrice());
+        //}
     }
 }

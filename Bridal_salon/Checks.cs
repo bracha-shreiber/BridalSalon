@@ -2,7 +2,7 @@
 {
     public class Checks<T>
     {
-        public bool IsIsraeliIdNumber(T id)
+        public bool IsIsraeliIdNumber(string id)
         {
             id = id.Trim();
             if (id.Length > 9 || !int.TryParse(id, out _))
@@ -13,7 +13,7 @@
             int sum = id.Select((c, i) => (c - '0') * ((i % 2) + 1) > 9 ? ((c - '0') * ((i % 2) + 1)) - 9 : (c - '0') * ((i % 2) + 1)).Sum();
             return sum % 10 == 0;
         }
-        public bool IsValidEmail(T email)
+        public bool IsValidEmail(string email)
         {
             var trimmedEmail = email.Trim();
 

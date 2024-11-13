@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bridal_salon.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class OrderController : ControllerBase
     {
         private static OrderService orderServers { get; set; }
@@ -24,6 +26,17 @@ namespace Bridal_salon.Controllers
             if(orderServers.GetOrderByNum(OrdNum)==null)
                 return NotFound();
             return Ok(true);
+        }
+       
+        [HttpGet("{BrideId}")]
+        public ActionResult GetByBride(string BrideId)
+        {
+            return Ok(orderServers.GetByBride(BrideId));
+        }
+        [HttpGet("{BeginDate}/{EndDate}")]
+        public ActionResult DateRange(DateTime BeginDate, DateTime EndDate)
+        {
+            return Ok(orderServers.DateRange(BeginDate, EndDate));
         }
         // POST api/<OrderController>
         [HttpPost]
@@ -50,16 +63,9 @@ namespace Bridal_salon.Controllers
                 return NotFound();
             return Ok(true);
         }
+       
 
-        public ActionResult GetByBride(string BrideId)
-        {
-            return Ok(orderServers.GetByBride(BrideId));
-        }
-
-        public ActionResult DateRange(DateTime BeginDate, DateTime EndDate)
-        {
-            return Ok(orderServers.DateRange(BeginDate, EndDate));
-        }
+       
 
     }
 }

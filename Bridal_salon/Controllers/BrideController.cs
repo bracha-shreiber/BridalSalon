@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bridal_salon.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BrideController : ControllerBase
     {
+       
         private static BrideService brideServers = new BrideService();
 
-        public static Checks<string> checks { get; set; }
+        public static Checks<string> checks = new Checks<string>(); 
         // GET: BrideController
         [HttpGet]
         public ActionResult Get()
@@ -26,6 +29,11 @@ namespace Bridal_salon.Controllers
             if(brideServers.GetBrideById(id) == null)
                 return NotFound();
             return Ok(true);
+        }
+        [HttpGet("{BeginHeight}/{LastHeight}")]
+        public ActionResult GetByHeight(int BeginHeight, int LastHeight)
+        {
+            return Ok(brideServers.GetByHeight(BeginHeight, LastHeight));
         }
         // POST api/<BrideController>
         [HttpPost]
@@ -56,9 +64,7 @@ namespace Bridal_salon.Controllers
                 return NotFound();
             return Ok(true);
         }
-        public ActionResult GetByHeight(int BeginHeight, int LastHeight)
-        {
-            return Ok(brideServers.GetByHeight(BeginHeight, LastHeight));
-        }
+
+       
     }
 }

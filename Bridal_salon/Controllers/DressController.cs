@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bridal_salon.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DressController : ControllerBase
     {
+        
         private static DressService dressService = new DressService();
       
         // GET: DressController
@@ -22,7 +25,12 @@ namespace Bridal_salon.Controllers
                 return NotFound();
             return Ok(true);
         }
-        
+        //[HttpGet("NewDresses")]
+        //public ActionResult GetNewDresses()
+        //{
+        //    return Ok(dressService.GetNewDresses());
+        //}
+
         // POST: DressController/Create
         [HttpPost]
         public ActionResult Post([FromBody] Dress value)
@@ -49,10 +57,7 @@ namespace Bridal_salon.Controllers
             return Ok(true);
         }
 
-        public ActionResult GetNewDresses()
-        {
-            return Ok(dressService.GetNewDresses());
-        }
+        
 
     }
 }
